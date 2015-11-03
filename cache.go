@@ -19,6 +19,7 @@ package cache
 
 import (
 	"fmt"
+
 	"github.com/lunny/tango"
 )
 
@@ -101,72 +102,72 @@ func Register(name string, adapter Adapter) {
 
 // Cacher provides tango action handler to get proper handler
 type Cacher interface {
-	SetCache(*Caches)
-}
-
-// Cache maintains cache adapter and tango handler interface
-type Cache struct {
-	adapter Adapter
-	options Options
-}
-
-// Put puts value into cache with key and expire time.
-func (c *Cache) Put(key string, val interface{}, timeout int64) error {
-	return c.adapter.Put(key, val, timeout)
-}
-
-// Get gets cached value by given key.
-func (c *Cache) Get(key string) interface{} {
-	return c.adapter.Get(key)
-}
-
-// Delete deletes cached value by given key.
-func (c *Cache) Delete(key string) error {
-	return c.adapter.Delete(key)
-}
-
-// Incr increases cached int-type value by given key as a counter.
-func (c *Cache) Incr(key string) error {
-	return c.adapter.Incr(key)
-}
-
-// Decr decreases cached int-type value by given key as a counter.
-func (c *Cache) Decr(key string) error {
-	return c.adapter.Decr(key)
-}
-
-// IsExist returns true if cached value exists.
-func (c *Cache) IsExist(key string) bool {
-	return c.adapter.IsExist(key)
-}
-
-// Flush deletes all cached data.
-func (c *Cache) Flush() error {
-	return c.adapter.Flush()
-}
-
-// Options return cache option.
-func (c *Cache) Option() Options {
-	return c.options
-}
-
-// set Caches
-func (c *Cache) SetCache(cs *Caches) {
-	c.adapter = cs.adapter
-	c.options = cs.Options
+	SetCaches(*Caches)
 }
 
 // Caches
 type Caches struct {
-	Options
+	options Options
 	adapter Adapter
+}
+
+// Cache maintains cache adapter and tango handler interface
+type Cache struct {
+	*Caches
+}
+
+var _ Cacher = new(Cache)
+
+// set Caches
+func (c *Cache) SetCaches(cs *Caches) {
+	c.Caches = cs
+}
+
+// Put puts value into cache with key and expire time.
+func (c *Caches) Put(key string, val interface{}, timeout int64) error {
+	return c.adapter.Put(key, val, timeout)
+}
+
+// Get gets cached value by given key.
+func (c *Caches) Get(key string) interface{} {
+	return c.adapter.Get(key)
+}
+
+// Delete deletes cached value by given key.
+func (c *Caches) Delete(key string) error {
+	return c.adapter.Delete(key)
+}
+
+// Incr increases cached int-type value by given key as a counter.
+func (c *Caches) Incr(key string) error {
+	return c.adapter.Incr(key)
+}
+
+// Decr decreases cached int-type value by given key as a counter.
+func (c *Caches) Decr(key string) error {
+	return c.adapter.Decr(key)
+}
+
+// IsExist returns true if cached value exists.
+func (c *Caches) IsExist(key string) bool {
+	return c.adapter.IsExist(key)
+}
+
+// Flush deletes all cached data.
+func (c *Caches) Flush() error {
+	return c.adapter.Flush()
+}
+
+// Options return cache option.
+func (c *Caches) Option() Options {
+	return c.options
 }
 
 // Handle implement tango.Handle
 func (c *Caches) Handle(ctx *tango.Context) {
 	if action := ctx.Action(); ctx != nil {
 		if s, ok := action.(Cacher); ok {
-			s.SetCache(c)
+			s.SetCaches(c)
 		}
 	}
 
@@ -182,7 +183,7 @@ func New(options ...Options) *Caches {
 		panic(err)
 	}
 	return &Caches{
-		Options: opt,
+		options: opt,
 		adapter: adapter,
 	}
 }
