@@ -1,19 +1,29 @@
 # cache
 
-Middleware cache provides cache management for [Macaron](https://github.com/go-macaron/macaron). It can use many cache adapters, including memory, file, Redis, Memcache, PostgreSQL, MySQL, Ledis and Nodb.
+Middleware cache provides cache management for [Tango](https://github.com/lunny/tango). It can use many cache adapters, including memory, file, Redis, Memcache, PostgreSQL, MySQL, Ledis and Nodb.
 
 ### Installation
 
-	go get github.com/go-macaron/cache
+	go get github.com/tango-contrib/cache
 
 ## Getting Help
 
-- [API Reference](https://gowalker.org/github.com/go-macaron/cache)
-- [Documentation](http://go-macaron.com/docs/middlewares/cache)
+- [API Reference](https://gowalker.org/github.com/tango-contrib/cache)
+
+## More adapters
+
+Default cache includes two adapters memory and file, you can find more adapters.
+
+- [Redis](http://github.com/tango-contrib/cache-redis)
+- [Memcache](http://github.com/tango-contrib/cache-memcache)
+- [PostgreSQL](http://github.com/tango-contrib/cache-postgres)
+- [MySQL](http://github.com/tango-contrib/cache-mysql)
+- [Ledis](http://github.com/tango-contrib/cache-ledis)
+- [Nodb](http://github.com/tango-contrib/cache-nodb)
 
 ## Credits
 
-This package is a modified version of [beego/cache](https://github.com/astaxie/beego/tree/master/cache).
+This package is a modified version of [macaron/cache](https://github.com/go-macaron/cache).
 
 ## License
 
